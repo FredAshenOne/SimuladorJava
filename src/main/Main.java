@@ -1,11 +1,21 @@
 package main;
 
+import java.awt.EventQueue;
+
 public class Main {
 
 	public static void main(String[] args) {
-	Ventana window = new Ventana();
-	window.setVisible(true);
-	window.setResizable(false);	
+
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Ventana frame = new Ventana();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 
 	}
 
