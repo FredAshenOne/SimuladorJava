@@ -10,7 +10,6 @@ import java.util.Timer;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
-import javax.swing.JProgressBar;
 import javax.swing.ListCellRenderer;
 
 public class ProcessManager {
@@ -41,7 +40,7 @@ public class ProcessManager {
 				Procesos proceso = (Procesos) value;
 				return super.getListCellRendererComponent(list,
 						"-Nombre: " + proceso.getName() + "  -Quantum: " + proceso.getQuantum() + "  -Prioridad: "
-								+ proceso.getPrioridad() + "  -Id: " + proceso.getId(),
+								+ proceso.getPrioridad() + "  -Id: " + proceso.getId()+"   -Status:  "+proceso.getStatus(),
 						index, isSelected, cellHasFocus);
 
 			}
@@ -102,32 +101,8 @@ public class ProcessManager {
 		}
 
 	}
-	
-	public void progresProces(DefaultListModel<Procesos> lista,JProgressBar p) {
-	 Thread hilo = new Thread(new Runnable() {
-		 
-		@Override
-		public void run() {
-			for(int i=0;i <= lista.size()-1;i++) {
-				System.out.println("proceso1");
-				while(p.getValue()<100) {
-				 System.out.println("increment");
-				int porcentaje = (int)100/lista.get(i).getQuantum();
-				p.setValue(p.getValue()+porcentaje);
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-						
-				}
-			}
-		}
-	 });
-	 
 		
-	}
+	
 	
 
 }

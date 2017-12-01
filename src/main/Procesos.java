@@ -6,12 +6,14 @@ public class Procesos {
 	private int quantum;
 	private int prioridad;
 	private int id;
+	private String status;
 
-	public Procesos(String name, int quantum, int prioridad, int id) {
+	public Procesos(String name, int quantum, int prioridad, int id,String status) {
 		this.name = name;
 		this.quantum = quantum;
 		this.prioridad = prioridad;
 		this.id = id;
+		this.status = status;
 	};
 
 	public void setQuantum(int nuevoQuantum) {
@@ -44,6 +46,14 @@ public class Procesos {
 
 	public int getId() {
 		return id;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 }

@@ -9,7 +9,6 @@ import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
-import java.util.Timer;
 import java.awt.event.ActionEvent;
 import javax.swing.JList;
 import javax.swing.JRadioButton;
@@ -27,7 +26,9 @@ public class Ventana extends JFrame implements ActionListener{
 	private JTextField prior;
 	private ButtonGroup botones = new ButtonGroup();
 	int id = 0;
+	MyThread tread;
 	JList<Procesos> lista;	// Create the frame.
+	private JLabel progName;
 
 	public Ventana() {
 		
@@ -115,14 +116,14 @@ public class Ventana extends JFrame implements ActionListener{
 		rdbtnPrioridad.addActionListener(this);
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(177, 11, 469, 122);
+		scrollPane.setBounds(177, 11, 469, 204);
 		contentPane.add(scrollPane);
 		
 		lista = new JList<>(model);
 		scrollPane.setViewportView(lista);
 		lista.setCellRenderer(processman.getCellRender());
 		JPanel goContainer = new JPanel();
-		goContainer.setBounds(20, 237, 141, 87);
+		goContainer.setBounds(20, 237, 141,87);
 		contentPane.add(goContainer);
 		goContainer.setLayout(null);
 		
@@ -132,7 +133,7 @@ public class Ventana extends JFrame implements ActionListener{
 		btnAgregar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Procesos proceso = new Procesos(name.getText(), Integer.parseInt(quantum.getText()),
-						Integer.parseInt(prior.getText()), id);
+						Integer.parseInt(prior.getText()), id,"En Espera");
 				model.addElement(proceso);
 				id++;
 				name.setText("");
@@ -146,23 +147,37 @@ public class Ventana extends JFrame implements ActionListener{
 		NuevoProc.add(btnAgregar);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(177, 144, 469, 33);
+		panel.setBounds(177, 258, 469, 43);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
 		JProgressBar progressBar = new JProgressBar();
-		progressBar.setBounds(0, 11, 469, 14);
+		progressBar.setBounds(0, 11, 469, 22);
 		panel.add(progressBar);
 
 		JButton btnIniciar = new JButton("Iniciar");
 		btnIniciar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				processman.progresProces(model,progressBar);
+			tread = new MyThread(model,progressBar,progName,lista);
+				
 			}
 		});
 		btnIniciar.setBounds(31, 11, 74, 71);
 		goContainer.add(btnIniciar);
-
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBounds(323, 224, 245, 23);
+		contentPane.add(panel_1);
+		panel_1.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("En Progreso:");
+		lblNewLabel.setBounds(0, 0, 76, 23);
+		panel_1.add(lblNewLabel);
+		
+		progName = new JLabel();
+		progName.setBounds(72, 0, 173, 22);
+		panel_1.add(progName);
+		
 		
 	}
 
@@ -173,39 +188,19 @@ public class Ventana extends JFrame implements ActionListener{
 			processman.fifoOrdering(model);
 
 			lista = new JList<> (model);
-			System.out.println(model.getElementAt(0).getName());
-
-			System.out.println(model.getElementAt(1).getName());
-
-			System.out.println(model.getElementAt(2).getName());
 			break;
 		case "LIFO":
 			processman.lifoOrdering(model);
 
 			lista = new JList<> (model);
-			System.out.println(model.getElementAt(0).getName());
-
-			System.out.println(model.getElementAt(1).getName());
-
-			System.out.println(model.getElementAt(2).getName());
 			 break;
 		case "SJF":
 			processman.sjfOrdering(model);
 			lista = new JList<> (model);
-			System.out.println(model.getElementAt(0).getName());
-
-			System.out.println(model.getElementAt(1).getName());
-
-			System.out.println(model.getElementAt(2).getName());
 			break;
 		case "Prioridad":
 			processman.priorOrdering(model);
 			lista = new JList<> (model);
-			System.out.println(model.getElementAt(0).getName());
-
-			System.out.println(model.getElementAt(1).getName());
-
-			System.out.println(model.getElementAt(2).getName());
 			break;
 		
 				 
