@@ -26,6 +26,10 @@ public class Ventana extends JFrame implements ActionListener{
 	private JTextField prior;
 	private ButtonGroup botones = new ButtonGroup();
 	int id = 0;
+	int p = 1;
+	JButton btnIniciar;
+	JButton btnNuevaSimulacion;
+
 	MyThread tread;
 	JList<Procesos> lista;	// Create the frame.
 	private JLabel progName;
@@ -34,14 +38,14 @@ public class Ventana extends JFrame implements ActionListener{
 		
 		setTitle("Simulador de Procesos");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 691, 482);
+		setBounds(100, 100, 683, 482);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
 		JPanel NuevoProc = new JPanel();
-		NuevoProc.setBounds(10, 11, 157, 122);
+		NuevoProc.setBounds(10, 11, 205, 152);
 		contentPane.add(NuevoProc);
 		NuevoProc.setLayout(null);
 
@@ -50,7 +54,7 @@ public class Ventana extends JFrame implements ActionListener{
 		NuevoProc.add(lblNombre);
 		
 		name = new JTextField();
-		name.setBounds(57, 8, 86, 20);
+		name.setBounds(57, 8, 100, 20);
 		NuevoProc.add(name);
 		name.setColumns(10);
 
@@ -59,7 +63,7 @@ public class Ventana extends JFrame implements ActionListener{
 		NuevoProc.add(lblDuracion);
 
 		quantum = new JTextField();
-		quantum.setBounds(57, 33, 86, 20);
+		quantum.setBounds(57, 33, 100, 20);
 		NuevoProc.add(quantum);
 		quantum.setColumns(10);
 
@@ -68,7 +72,7 @@ public class Ventana extends JFrame implements ActionListener{
 		NuevoProc.add(lblPrioridad);
 
 		prior = new JTextField();
-		prior.setBounds(57, 58, 86, 20);
+		prior.setBounds(57, 58, 100, 20);
 		NuevoProc.add(prior);
 		prior.setColumns(10);
 
@@ -82,7 +86,7 @@ public class Ventana extends JFrame implements ActionListener{
 		contentPane.add(btnSalir);
 
 		JPanel Selector = new JPanel();
-		Selector.setBounds(10, 133, 157, 93);
+		Selector.setBounds(10, 174, 157, 93);
 		contentPane.add(Selector);
 		Selector.setLayout(null);
 
@@ -116,14 +120,14 @@ public class Ventana extends JFrame implements ActionListener{
 		rdbtnPrioridad.addActionListener(this);
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(177, 11, 469, 204);
+		scrollPane.setBounds(225, 11, 432, 202);
 		contentPane.add(scrollPane);
 		
 		lista = new JList<>(model);
 		scrollPane.setViewportView(lista);
 		lista.setCellRenderer(processman.getCellRender());
 		JPanel goContainer = new JPanel();
-		goContainer.setBounds(20, 237, 141,87);
+		goContainer.setBounds(10, 268, 141,87);
 		contentPane.add(goContainer);
 		goContainer.setLayout(null);
 		
@@ -140,33 +144,85 @@ public class Ventana extends JFrame implements ActionListener{
 				quantum.setText("");
 				prior.setText("");
 				lista.setModel(model);
+				
 
 			}
 		});
-		btnAgregar.setBounds(10, 86, 133, 23);
+		btnAgregar.setBounds(35, 86, 133, 23);
 		NuevoProc.add(btnAgregar);
 		
+		JButton btnR = new JButton("R\r\n");
+		btnR.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				name.setText("Proceso"+p);
+				p++;
+				
+			}
+		});
+		btnR.setBounds(162, 7, 22, 23);
+		NuevoProc.add(btnR);
+		
+		JButton buttonr1 = new JButton("R\r\n");
+		buttonr1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				quantum.setText(Integer.toString((int)(Math.random()*100)+1));
+				
+			}
+		});
+		buttonr1.setBounds(162, 32, 22, 23);
+		NuevoProc.add(buttonr1);
+		
+		JButton buttonr2 = new JButton("R\r\n");
+		buttonr2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				prior.setText(Integer.toString((int)(Math.random()*100)+1));
+			}
+		});
+		buttonr2.setBounds(162, 57, 22, 23);
+		NuevoProc.add(buttonr2);
+		
+		
 		JPanel panel = new JPanel();
-		panel.setBounds(177, 258, 469, 43);
+		panel.setBounds(225, 253, 432, 41);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
 		JProgressBar progressBar = new JProgressBar();
-		progressBar.setBounds(0, 11, 469, 22);
+		progressBar.setBounds(0, 11, 432, 19);
 		panel.add(progressBar);
 
-		JButton btnIniciar = new JButton("Iniciar");
+		btnIniciar = new JButton("Iniciar");
 		btnIniciar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			tread = new MyThread(model,progressBar,progName,lista);
-				
+				lista.setSelectedIndex(0);
+				btnIniciar.setEnabled(false);
+				btnAgregar.setEnabled(false);
+				tread = new MyThread(model,progressBar,progName,lista,btnNuevaSimulacion);
+				lista.setSelectedIndex(1);
 			}
 		});
 		btnIniciar.setBounds(31, 11, 74, 71);
 		goContainer.add(btnIniciar);
 		
+		btnNuevaSimulacion = new JButton("Nueva Simulacion");
+		btnNuevaSimulacion.setEnabled(false);
+		btnNuevaSimulacion.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnAgregar.setEnabled(true);
+				btnIniciar.setEnabled(true);
+				btnNuevaSimulacion.setEnabled(false);
+				model.removeAllElements();
+				lista = new JList<>(model);
+				
+				
+			}
+		});
+		btnNuevaSimulacion.setBounds(35, 118, 133, 23);
+		NuevoProc.add(btnNuevaSimulacion);
+		
+		
 		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(323, 224, 245, 23);
+		panel_1.setBounds(401, 224, 245, 23);
 		contentPane.add(panel_1);
 		panel_1.setLayout(null);
 		
